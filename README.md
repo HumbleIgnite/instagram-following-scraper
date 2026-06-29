@@ -1,71 +1,186 @@
-[Instagram Following Scraper](https://apify.com/scrapier/instagram-following-scraper?fpr=data)
+[Instagram Following Scraper](https://apify.com/instaprism/instagram-following-scraper?fpr=data)
 
-A compact, production-grade **Apify Actor** that scrapes Instagram **following** lists for one or more input profiles and saves results **in real time** to the dataset.
+# Instagram Following Scraper - Export Who Any Account Follows 2026
 
-## Why Choose This Actor?
+Extract the complete list of accounts that any public Instagram user follows. See who influences your competitors, discover partnership opportunities, and map relationship networks.
 
-- **Matches your required output shape** (same keys as your `output.json`)
-- **Bulk input** (URLs or usernames/keywords)
-- **Smart proxy fallback**:
+## No Login Required
 
-- Start with **no proxy** (direct)
-- If blocked → fallback to **datacenter proxy**
-- If blocked → fallback to **residential proxy**
-- If residential fails → **retry 3 times** with residential
-- After fallback happens → **stick to residential** for remaining requests
-- **Clear progress logs** to keep the user engaged
+**Your Instagram account stays safe.** This Actor:
+
+- Does NOT require your Instagram login or cookies
+- Uses our own infrastructure to fetch data
+- Zero risk of account suspension for you
+- Works with any public Instagram profile
+
+Unlike browser extensions or tools that use your account, we handle all scraping server-side. Your credentials are never needed.
+
+## Important: Processing Time
+
+**This Actor uses a distributed scraping architecture.** Here's what to expect:
+
+| Data Size | First Results | Complete Results |
+| --- | --- | --- |
+| 1,000 following | 2-5 min | 5-10 min |
+| 5,000 following | 5-10 min | 15-30 min |
+| 10,000+ following | 10-20 min | 30-60+ min |
+
+**Why does it take time?**
+
+- Instagram has strict rate limits to prevent spam
+- We use multiple proxy servers worldwide to stay undetected
+- Large following lists require sequential data fetching
+
+**Don't worry about timeouts!** Our streaming mode saves results every 60 seconds. Even if Apify times out after 24h, you'll have all the data collected up to that point.
+
+## What You Get
+
+- **User ID** - Unique Instagram identifier for each followed account
+- **Username** - Instagram handle (without @)
+- **Full Name** - Display name from their profile
+- **Profile Picture URL** - Direct link to their profile image
+- **Verification Status** - Whether the account has a blue checkmark
+- **Position** - Order in the following list
+- **Timestamp** - When the data was scraped
 
 ## Input
 
-Example:
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `username` | String | Yes | - | The Instagram username to scrape following from (without the @ symbol) |
+| `limit` | Integer | No | 1000 | Maximum number of accounts to extract. Set to 0 for unlimited |
+| `extractEmails` | Boolean | No | false | Try to extract contact info from business profiles. Slower but useful for partnership outreach |
+
+### Example Input
 
 ```
 {
-  "urls": [
-    "https://www.instagram.com/mrbeast/",
-    "virat.kohli"
-  ],
-  "maxItems": 300,
-  "pageSize": 12,
-  "sessionId": "YOUR_SESSIONID_COOKIE_VALUE",
-  "proxyConfiguration": {
-    "useApifyProxy": false
-  }
+    "username": "garyvee",
+    "limit": 2000,
+    "extractEmails": false
 }
 ```
 
 ## Output
 
-Each dataset item contains these keys:
+| Field | Type | Example | Description |
+| --- | --- | --- | --- |
+| `position` | Integer | 1 | Position in the following list |
+| `userId` | String | "12345678901" | Unique Instagram user ID |
+| `username` | String | "entrepreneur_hub" | Instagram username |
+| `fullName` | String | "Entrepreneur Hub" | User's display name |
+| `profilePicUrl` | String | "[https://scontent](https://scontent)..." | URL to profile picture |
+| `isVerified` | Boolean | true | True if account has blue checkmark |
+| `scrapedFrom` | String | "garyvee" | Source account username |
+| `scrapedAt` | String | "2026-01-15T10:30:00.000Z" | ISO timestamp of extraction |
 
-- `pk`, `pk_id`, `id`, `full_name`, `is_private`, `fbid_v2`, `third_party_downloads_enabled`, `strong_id__`, `profile_pic_id`, `profile_pic_url`, `is_verified`, `username`, `has_anonymous_profile_picture`, `account_badges`, `latest_reel_media`, `is_favorite`, `followed_by`
+### Example Output
 
-## Notes / Cautions
+```
+[
+    {
+        "position": 1,
+        "userId": "12345678901",
+        "username": "entrepreneur_hub",
+        "fullName": "Entrepreneur Hub",
+        "profilePicUrl": "https://scontent-cdg4-1.cdninstagram.com/v/t51.2885-19/...",
+        "isVerified": true,
+        "scrapedFrom": "garyvee",
+        "scrapedAt": "2026-01-15T10:30:00.000Z"
+    },
+    {
+        "position": 2,
+        "userId": "98765432109",
+        "username": "business_insider",
+        "fullName": "Business Insider",
+        "profilePicUrl": "https://scontent-cdg4-1.cdninstagram.com/v/t51.2885-19/...",
+        "isVerified": true,
+        "scrapedFrom": "garyvee",
+        "scrapedAt": "2026-01-15T10:30:01.000Z"
+    }
+]
+```
 
-- The actor scrapes only **publicly available** data.
-- The end user is responsible for compliance with applicable laws and platform rules.
+## Use Cases
 
-## What are other Instagram scraping tools?
+- **Competitor Intelligence** - Discover who your competitors follow. Find their partners, vendors, and influences.
+- **Influencer Research** - Understand who shapes opinions in your industry by analyzing who thought leaders follow.
+- **Partnership Discovery** - Find potential partners by seeing who key accounts in your niche follow.
+- **Network Mapping** - Build relationship graphs to understand industry connections.
+- **Trend Spotting** - See which accounts industry leaders are paying attention to.
 
-If you want to scrape specific Instagram data, you can use any of the dedicated scrapers below for faster and more targeted results.
+## Streaming Mode (Auto-Save)
 
-| Scraper Name | Scraper Name |
-| --- | --- |
-| [Instagram B2b Email Scraper](https://apify.com/scrapier/instagram-b2b-email-scraper) | [Instagram Posts Scraper](https://apify.com/scrapier/instagram-posts-scraper) |
-| [Instagram B2b Lead Scraper](https://apify.com/scrapier/instagram-b2b-lead-scraper) | [Instagram Profile Email Scraper](https://apify.com/scrapier/instagram-profile-email-scraper) |
-| [Instagram B2b Phone Number Scraper](https://apify.com/scrapier/instagram-b2b-phone-number-scraper) | [Instagram Profile Email Scraper By Keyword](https://apify.com/scrapier/instagram-profile-email-scraper-by-keyword) |
-| [Instagram Comments Scraper](https://apify.com/scrapier/instagram-comments-scraper) | [Instagram Profile Lead Scraper](https://apify.com/scrapier/instagram-profile-lead-scraper) |
-| [Instagram Dm Automation](https://apify.com/scrapier/instagram-dm-automation) | [Instagram Profile Lead Scraper By Keyword](https://apify.com/scrapier/instagram-profile-lead-scraper-by-keyword) |
-| [Instagram Email Scraper](https://apify.com/scrapier/instagram-email-scraper) | [Instagram Profile Phone Number Scraper](https://apify.com/scrapier/instagram-profile-phone-number-scraper) |
-| [Instagram Followers And Following Scrapper](https://apify.com/scrapier/instagram-followers-and-following-scrapper) | [Instagram Profile Phone Number Scraper By Keyword](https://apify.com/scrapier/instagram-profile-phone-number-scraper-by-keyword) |
-| [Instagram Followers Count Scraper](https://apify.com/scrapier/instagram-followers-count-scraper) | [Instagram Profile Post Scraper](https://apify.com/scrapier/instagram-profile-post-scraper) |
-| [Instagram Followers Scraper](https://apify.com/scrapier/instagram-followers-scraper) | [Instagram Profile Reels Scraper](https://apify.com/scrapier/instagram-profile-reels-scraper) |
-| [Instagram Hashtag Scraper](https://apify.com/scrapier/instagram-hashtag-scraper) | [Instagram Profile Scraper](https://apify.com/scrapier/instagram-profile-scraper) |
-| [Instagram Hashtag Username Scraper](https://apify.com/scrapier/instagram-hashtag-username-scraper) | [Instagram Reels Scraper](https://apify.com/scrapier/instagram-reels-scraper) |
-| [Instagram Highlights Scraper](https://apify.com/scrapier/instagram-highlights-scraper) | [Instagram Related Hashtag Stats Scraper](https://apify.com/scrapier/instagram-related-hashtag-stats-scraper) |
-| [Instagram Lead Scraper](https://apify.com/scrapier/instagram-lead-scraper) | [Instagram Related Person Scraper](https://apify.com/scrapier/instagram-related-person-scraper) |
-| [Instagram Likes Scraper](https://apify.com/scrapier/instagram-likes-scraper) | [Instagram Single Reels Scraper](https://apify.com/scrapier/instagram-single-reels-scraper) |
-| [Instagram Location Scraper](https://apify.com/scrapier/instagram-location-scraper) | [Instagram Story Details Scraper](https://apify.com/scrapier/instagram-story-details-scraper) |
-| [Instagram Mentions Scraper](https://apify.com/scrapier/instagram-mentions-scraper) | [Instagram Tagged Mentions Posts Scraper](https://apify.com/scrapier/instagram-tagged-mentions-posts-scraper) |
-| [Instagram Phone Number Scraper](https://apify.com/scrapier/instagram-phone-number-scraper) | [Instagram Tagged Posts Scraper](https://apify.com/scrapier/instagram-tagged-posts-scraper) |
-| [Instagram Post Details Scraper](https://apify.com/scrapier/instagram-post-details-scraper) |  |
+This Actor uses **streaming mode** to protect your data:
+
+- Results saved to dataset every 60 seconds
+- No data loss even on timeout or interruption
+- Monitor progress in real-time via logs
+- Partial results always available
+
+**Example:** If you're scraping 10,000 following and Apify times out at 7,000, you still get those 7,000 accounts. Just run again to get the rest.
+
+## Integrations
+
+Export your data to:
+
+- **Google Sheets** - Direct integration, auto-sync results
+- **Zapier / Make (Integromat)** - Trigger workflows when scrape completes
+- **Webhooks** - Get real-time notifications
+- **API** - Programmatic access via Apify API
+- **Download** - JSON / CSV / Excel files
+
+## FAQ
+
+### Why is my scrape taking so long?
+
+Instagram strictly limits how fast data can be fetched. Our distributed architecture uses multiple proxies worldwide to maximize speed while staying undetected. Accounts following thousands of users naturally take longer because we must fetch data in batches.
+
+### Can I scrape private accounts?
+
+No, this Actor only works with public Instagram profiles. Private accounts require login credentials which we don't support.
+
+### What if the Actor times out?
+
+Your data is safe! Streaming mode saves results every 60 seconds to the Apify dataset. If the run times out, you can download whatever was collected. Then run again to get more.
+
+### What's the difference between followers and following?
+
+**Followers** = people who follow an account. **Following** = accounts that user follows. This scraper extracts the *following* list (who they follow).
+
+### How accurate is the data?
+
+Data is scraped in real-time directly from Instagram. It reflects the current state of the account at scrape time.
+
+### Why would someone want this data?
+
+The accounts someone follows reveal their interests, influences, and network. This is valuable for competitor research, influencer analysis, and partnership prospecting.
+
+### How often can I run this?
+
+As often as you need. Each run is independent. For monitoring changes, set up scheduled runs via Apify.
+
+## Keywords
+
+Instagram following scraper, export Instagram following, Instagram following list, scrape Instagram following, who does account follow, Instagram competitor analysis, Instagram influencer research, Instagram network mapping, Instagram partnership discovery, Instagram data extraction
+
+## Need Custom Solutions?
+
+Looking for **custom scraping**, **higher limits**, or **dedicated infrastructure**?
+
+📩 **Contact us:**
+
+- **Telegram:** [@taskforceorange](https://t.me/taskforceorange)
+- **Website:** [social-swarm.com](https://social-swarm.com)
+
+We offer:
+
+- Custom actor development
+- Enterprise-grade scraping solutions
+- Dedicated proxy infrastructure
+- White-label integrations
+- Priority support
+
+---
+
+*Built with ❤️ by the InstaPrism team*
